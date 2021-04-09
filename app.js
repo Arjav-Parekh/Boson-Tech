@@ -39,7 +39,7 @@ const citySchema = new mongoose.Schema({
 const City = mongoose.model("City",citySchema);
 
 // const newCity = new City ({
-//   name: "Mumbai",
+//   name: "mumbai",
 //   country : "India",
 //   temperatures: "Hot and Humid throughout the year. Heavy rains during monsoon",
 //   transport:"Bus, Taxis, Rickshaws, Mumbai Suburban Railway, Metro.",
@@ -68,7 +68,7 @@ const City = mongoose.model("City",citySchema);
 // });
 
 // const newCity = new City ({
-//   name: "Delhi",
+//   name: "delhi",
 //   country : "India",
 //   temperatures: "Summer (Jun–Aug) is very hot. Monsoon season is Jun–Sep. Winter (Dec–Feb) is cool. Oct–Mar is the peak travel time.",
 //   transport:"Buses, Auto-rickshaws, Taxis, Cycle-rickshaws, Metro, Ring Railway",
@@ -104,44 +104,66 @@ const City = mongoose.model("City",citySchema);
 //   }
 // })
 
+app.post("/",function(req,res){
+  let loc=req.body.city;
+  loc=loc.toLowerCase();
+  console.log(loc);
+  City.findOne({name:loc},function(err,city){
+    if(!err){
+      res.render("city",{
+        id:city.__id,
+        name:city.name.toUpperCase(),
+        country:city.country,
+        temperature:city.temperatures,
+        transport:city.transport,
+        food:city.food,
+        sites:city.sites
+      })
+    }else{
+      console.log(err);
+      res.redirect("/");  
+    }
+  })
+});
+
 app.get("/", function(req, res) {
   res.render("home");
 })
 
-app.post("/search",function(req,res){
-    var cityName =req.body.city;
-    var options = {
-        "method": "GET",
-        "hostname": "wft-geo-db.p.rapidapi.com",
-        "port": null,
-        "path": "/v1/geo/cities?namePrefix="+cityName+"&sort=India",
-        "headers": {
-            "x-rapidapi-key": "47c6576c39mshd96f5ef52477c9cp1ae6efjsn7c287bdd0905",
-            "x-rapidapi-host": "wft-geo-db.p.rapidapi.com",
-            "useQueryString": true
-        }
-    };
+// app.post("/search",function(req,res){
+//     var cityName =req.body.city;
+//     var options = {
+//         "method": "GET",
+//         "hostname": "wft-geo-db.p.rapidapi.com",
+//         "port": null,
+//         "path": "/v1/geo/cities?namePrefix="+cityName+"&sort=India",
+//         "headers": {
+//             "x-rapidapi-key": "47c6576c39mshd96f5ef52477c9cp1ae6efjsn7c287bdd0905",
+//             "x-rapidapi-host": "wft-geo-db.p.rapidapi.com",
+//             "useQueryString": true
+//         }
+//     };
     
-    const require = http.request(options, function (res) {
+//     const require = http.request(options, function (res) {
     
-        res.on("data", function (data) {
-          const placeData = JSON.parse(data);
-          // const placeCountry = placeData.data[0].country;
-          // const placeRegion = placeData.data[0].region;
-          // const placeLat = placeData.data[0].latitude;
-          // const placeLong = placeData.data[0].longitude;
+//         res.on("data", function (data) {
+//           const placeData = JSON.parse(data);
+//           // const placeCountry = placeData.data[0].country;
+//           // const placeRegion = placeData.data[0].region;
+//           // const placeLat = placeData.data[0].latitude;
+//           // const placeLong = placeData.data[0].longitude;
 
-          // console.log(placeCountry.toString() + " "+placeRegion.toString()+ " "+placeLat.toString()+ " "+placeLong.toString()  );
-          console.log(placeData)
-        });
+//           // console.log(placeCountry.toString() + " "+placeRegion.toString()+ " "+placeLat.toString()+ " "+placeLong.toString()  );
+//           console.log(placeData)
+//         });
     
-    });
+//     });
     
-    require.end();
+//     require.end();
 
 
 
-})
+// })
 
 
 
